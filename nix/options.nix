@@ -42,6 +42,21 @@ with lib;
     '';
   };
 
+  extraPlugins = mkOption {
+    type = types.listOf types.package;
+    default = [];
+    example = literalExpression ''
+      with pkgs.vimPlugins; [
+        undotree
+        vim-tmux-navigator
+      ]
+    '';
+    description = ''
+      Additional Neovim plugin packages to include in the lazy.nvim dev path.
+      Use this for plugins not covered by LazyVim extras.
+    '';
+  };
+
   treesitterParsers = mkOption {
     type = types.listOf types.package;
     default = [];
