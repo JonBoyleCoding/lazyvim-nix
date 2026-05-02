@@ -1,5 +1,8 @@
 {
-  "catppuccin/nvim": "catppuccin-nvim",
+  "catppuccin/nvim": {
+    "package": "catppuccin-nvim",
+    "module": "catppuccin"
+  },
   "saghen/blink.cmp": "blink-cmp",
   "saghen/blink.compat": "blink-compat",
   "echasnovski/mini.icons": {

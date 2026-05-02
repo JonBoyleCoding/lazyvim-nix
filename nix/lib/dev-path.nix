@@ -53,7 +53,11 @@ rec {
       devPluginSpecs = lib.zipListsWith (spec: plugin:
         if plugin != null &&
            spec.name != "nvim-treesitter/nvim-treesitter" then
-          ''{ "${self.getRepoName spec.name}", dev = true, pin = true },''
+          let
+            mapping = pluginMappings.${spec.name} or null;
+            isMultiModule = mapping != null && builtins.isAttrs mapping && mapping ? module;
+            devName = if isMultiModule then mapping.module else self.getRepoName spec.name;
+          in ''{ "${devName}", dev = true, pin = true },''
         else
           null
       ) allPluginSpecs resolvedPlugins;
