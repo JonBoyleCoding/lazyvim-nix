@@ -3,7 +3,7 @@
 
 rec {
   # Helper function to create dev path with proper symlinks for all plugins
-  createDevPath = allPluginSpecs: allResolvedPlugins:
+  createDevPath = allPluginSpecs: allResolvedPlugins: extraPlugins:
     let
       # Separate multi-module plugins from regular plugins
       pluginWithType = lib.zipListsWith (spec: plugin:
@@ -32,12 +32,15 @@ rec {
           deduplicated = lib.mapAttrsToList (linkName: plugins: lib.head plugins) grouped;
         in deduplicated;
 
-      # Create symlink commands
+      # Create symlink commands for resolved plugins
       linkCommands = map (p: "ln -sf ${p.plugin} $out/${p.linkName}") deduplicatedPlugins;
+
+      # Create symlink commands for extra plugins
+      extraLinkCommands = map (p: "ln -sf ${p} $out/${p.pname or p.name}") extraPlugins;
     in
       pkgs.runCommand "lazyvim-dev-path" {} ''
         mkdir -p $out
-        ${lib.concatStringsSep "\n" linkCommands}
+        ${lib.concatStringsSep "\n" (linkCommands ++ extraLinkCommands)}
       '';
 
   # Extract repository name from plugin spec (needed for config generation)
@@ -46,7 +49,7 @@ rec {
     in if lib.length parts == 2 then lib.elemAt parts 1 else specName;
 
   # Generate dev plugin specs for available plugins
-  generateDevPluginSpecs = self: allPluginSpecs: resolvedPlugins:
+  generateDevPluginSpecs = self: allPluginSpecs: resolvedPlugins: extraPlugins:
     let
       # nvim-treesitter is excluded here because the starter patcher injects a
       # dedicated spec for it (see starter-patcher.nix defaultTreesitterSpec).
@@ -60,6 +63,11 @@ rec {
 
       # Filter out null entries
       availableDevSpecs = lib.filter (s: s != null) devPluginSpecs;
+
+      # Generate dev specs for extra plugins
+      extraDevSpecs = map (p:
+        ''{ "${p.pname or p.name}", dev = true, pin = true },''
+      ) extraPlugins;
     in
-      availableDevSpecs;
+      availableDevSpecs ++ extraDevSpecs;
 }
