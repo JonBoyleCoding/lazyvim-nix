@@ -135,10 +135,10 @@ let
       if found != null then found else pkgs.vimPlugins.nvim-treesitter;
 
   # Create the dev path with proper symlinks
-  devPath = devPathLib.createDevPath allPluginSpecs resolvedPlugins;
+  devPath = devPathLib.createDevPath allPluginSpecs resolvedPlugins cfg.extraPlugins;
 
   # Generate dev plugin specs for available plugins
-  availableDevSpecs = devPathLib.generateDevPluginSpecs devPathLib allPluginSpecs resolvedPlugins;
+  availableDevSpecs = devPathLib.generateDevPluginSpecs devPathLib allPluginSpecs resolvedPlugins cfg.extraPlugins;
 
   # Generate extras import statements
   extrasImportSpecs = configLib.extrasImportSpecs enabledExtras;
@@ -226,8 +226,8 @@ in {
       # Add all required packages
       extraPackages = cfg.extraPackages ++ systemPackages;
 
-      # Add lazy.nvim as a plugin
-      plugins = [ pkgs.vimPlugins.lazy-nvim ];
+      # Add lazy.nvim and any extra plugins
+      plugins = [ pkgs.vimPlugins.lazy-nvim ] ++ cfg.extraPlugins;
     };
 
     # Link treesitter parsers to the correct data directory
