@@ -144,11 +144,11 @@ let
   extrasImportSpecs = configLib.extrasImportSpecs enabledExtras;
 
   # Treesitter configuration
-  # Select grammar source based on pluginSource strategy:
+  # Select grammar source based on treesitterSource option:
   # - "latest": Build parsers from source to match nvim-treesitter version
   # - "nixpkgs": Use nixpkgs grammarPlugins (current behavior)
   treesitterGrammars =
-    if cfg.pluginSource == "latest" then
+    if cfg.treesitterSource == "latest" then
       treesitterLib.treesitterGrammarsFromSource automaticTreesitterParsers
     else
       treesitterLib.treesitterGrammars automaticTreesitterParsers;
