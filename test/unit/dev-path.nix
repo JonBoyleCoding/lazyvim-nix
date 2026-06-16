@@ -27,8 +27,8 @@ let
     { name = "owner/unresolved-plugin"; }
   ];
   resolved = [ fakeCatppuccin fakeOther fakeMini fakeMini fakeMini null ];
-  devPath = createDevPath specs resolved;
-  devSpecs = generateDevPluginSpecs devPathLib specs resolved;
+  devPath = createDevPath specs resolved [];
+  devSpecs = generateDevPluginSpecs devPathLib specs resolved [];
   starterPatcher = import ../../nix/lib/starter-patcher.nix { inherit lib; };
   # Return the generated options so the test can normalize its own plugin specs.
   config = pkgs.writeText "dev-path-config.lua" (builtins.replaceStrings
@@ -96,7 +96,7 @@ in {
       { name = "nvim-treesitter/nvim-treesitter"; }
       { name = "nvim-treesitter/nvim-treesitter-textobjects"; }
       { name = "owner/unresolved-plugin"; }
-    ] [ fakeMini fakeMini null ])) 1;
+    ] [ fakeMini fakeMini null ] [])) 1;
 
   test-dev-path-lazy-identity = pkgs.runCommand "test-dev-path-lazy-identity" {
     nativeBuildInputs = [ pkgs.neovim-unwrapped ];
