@@ -42,7 +42,7 @@ let
   ];
   devPathResolved = [ fakeLazy fakeLsp fakeMini fakeMini fakeMini null ];
 
-  devPath = createDevPath devPathSpecs devPathResolved;
+  devPath = createDevPath devPathSpecs devPathResolved [];
 
   # generateDevPluginSpecs must exclude nvim-treesitter (it gets a dedicated
   # spec from the starter patcher) and unresolved plugins; everything else,
@@ -52,7 +52,7 @@ let
     { name = "nvim-treesitter/nvim-treesitter"; }
     { name = "nvim-treesitter/nvim-treesitter-textobjects"; }
     { name = "owner/unresolved-plugin"; }
-  ] [ fakeLazy fakeMini fakeMini null ];
+  ] [ fakeLazy fakeMini fakeMini null ] [];
 
 in {
   # getRepoName: real function edge cases
