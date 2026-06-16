@@ -60,7 +60,7 @@ let
   # spec must use the module name to match the dev-path dir lazy.nvim resolves.
   catppuccinDevSpecs = generateDevPluginSpecs devPathLib
     [ { name = "catppuccin/nvim"; } ]
-    [ (fakePlugin "catppuccin-nvim") ];
+    [ (fakePlugin "catppuccin-nvim") ] [];
 
 in {
   # getRepoName: real function edge cases
