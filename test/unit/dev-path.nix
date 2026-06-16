@@ -10,6 +10,7 @@ let
     "nvim-mini/mini.ai" = { package = "mini-nvim"; module = "mini.ai"; };
     "nvim-mini/mini.pairs" = { package = "mini-nvim"; module = "mini.pairs"; };
     "folke/lazy.nvim" = "lazy-nvim";
+    "catppuccin/nvim" = { package = "catppuccin-nvim"; module = "catppuccin"; };
   };
 
   # The real dev path library under test
@@ -53,6 +54,13 @@ let
     { name = "nvim-treesitter/nvim-treesitter-textobjects"; }
     { name = "owner/unresolved-plugin"; }
   ] [ fakeLazy fakeMini fakeMini null ];
+
+  # catppuccin: spec name "catppuccin/nvim", nixpkgs package "catppuccin-nvim",
+  # module "catppuccin". The module differs from the repo name "nvim". The dev
+  # spec must use the module name to match the dev-path dir lazy.nvim resolves.
+  catppuccinDevSpecs = generateDevPluginSpecs devPathLib
+    [ { name = "catppuccin/nvim"; } ]
+    [ (fakePlugin "catppuccin-nvim") ];
 
 in {
   # getRepoName: real function edge cases
@@ -102,4 +110,10 @@ in {
     "dev-specs-exclusions"
     (builtins.length devSpecs)
     2;
+
+  # generateDevPluginSpecs: catppuccin's dev spec uses its module name
+  test-catppuccin-dev-spec = testLib.testEval
+    "catppuccin-dev-spec"
+    (builtins.head catppuccinDevSpecs)
+    ''{ "catppuccin", dev = true, pin = true },'';
 }
